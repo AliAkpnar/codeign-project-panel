@@ -8,7 +8,7 @@
     <div class="col-md-12">
         <div class="widget p-lg">
 
-            <?php if(empty($items)) { ?>
+            <?php if (empty($items)) { ?>
 
                 <div class="alert alert-info text-center">
                     <p>Burada herhangi bir veri bulunmamaktadır. Eklemek için lütfen <a href="<?php echo base_url("news/new_form"); ?>">tıklayınız</a></p>
@@ -30,7 +30,7 @@
                     </thead>
                     <tbody class="sortable" data-url="<?php echo base_url("news/rankSetter"); ?>">
 
-                        <?php foreach($items as $item) { ?>
+                        <?php foreach ($items as $item) { ?>
 
                             <tr id="ord-<?php echo $item->id; ?>">
                                 <td class="order"><i class="fa fa-reorder"></i></td>
@@ -39,25 +39,23 @@
                                 <td><?php echo $item->url; ?></td>
                                 <td><?php echo $item->description; ?></td>
                                 <td><?php echo $item->news_type; ?></td>
-                                <td>Görsel Gelecek</td>
                                 <td>
-                                    <input
-                                        data-url="<?php echo base_url("news/isActiveSetter/$item->id"); ?>"
-                                        class="isActive"
-                                        type="checkbox"
-                                        data-switchery
-                                        data-color="#10c469"
-                                        <?php echo ($item->isActive) ? "checked" : ""; ?>
-                                    />
+                                    <?php if ($item->news_type == "image") { ?>
+                                        <img width="100" src="<?php echo base_url("uploads/${viewFolder}/$item->img_url"); ?>" alt="" class="img-rounded">
+                                    <?php } else if ($item->news_type == "video") { ?>
+                                        <iframe width="100" src="<?php echo $item->video_url; ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                                        </iframe>
+                                    <?php } ?>
                                 </td>
                                 <td>
-                                    <button
-                                        data-url="<?php echo base_url("news/delete/$item->id"); ?>"
-                                        class="btn btn-sm btn-danger btn-outline remove-btn">
+                                    <input data-url="<?php echo base_url("news/isActiveSetter/$item->id"); ?>" class="isActive" type="checkbox" data-switchery data-color="#10c469" <?php echo ($item->isActive) ? "checked" : ""; ?> />
+                                </td>
+                                <td>
+                                    <button data-url="<?php echo base_url("news/delete/$item->id"); ?>" class="btn btn-sm btn-danger btn-outline remove-btn">
                                         <i class="fa fa-trash"></i> Sil
                                     </button>
-                                    <a href="<?php echo base_url("news/update_form/$item->id"); ?>" class="btn btn-sm btn-info btn-outline"><i class="fa fa-pencil-square-o"></i> Düzenle</a>
-                                    
+                                    <a href="<?php echo base_url("news/update_form/$item->id"); ?>" class="btn btn-sm btn-warning btn-outline"><i class="fa fa-pencil-square-o"></i> Düzenle</a>
+
                                 </td>
                             </tr>
 

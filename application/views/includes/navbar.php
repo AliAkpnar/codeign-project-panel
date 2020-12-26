@@ -17,9 +17,9 @@
             <span class="zmdi zmdi-hc-lg zmdi-search"></span>
         </button>
 
-        <a href="../index.html" class="navbar-brand">
+        <a href="" class="navbar-brand">
             <span class="brand-icon"><i class="fa fa-gg"></i></span>
-            <span class="brand-name">Infinity</span>
+            <span class="brand-name">Codeigniter-P</span>
         </a>
     </div><!-- .navbar-header -->
 
@@ -44,7 +44,7 @@
                 </li>
 
 
-               <!--  <li class="dropdown">
+                <!--  <li class="dropdown">
                     <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-hc-lg zmdi-settings"></i></a>
                     <ul class="dropdown-menu animated flipInY">
                         <li><a href="javascript:void(0)"><i class="zmdi m-r-md zmdi-hc-lg zmdi-account-box"></i>My Profile</a></li>

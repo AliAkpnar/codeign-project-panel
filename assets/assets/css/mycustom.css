@@ -4,7 +4,9 @@
 
 td {
   vertical-align: middle !important;
+  display: table-cell;
 }
+
 th {
   text-align: center;
 }
