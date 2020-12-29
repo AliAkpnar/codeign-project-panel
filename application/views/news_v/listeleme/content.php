@@ -37,20 +37,20 @@
                                 <td class="w50">#<?php echo $item->id; ?></td>
                                 <td><?php echo $item->title; ?></td>
                                 <td><?php echo $item->url; ?></td>
-                                <td><?php echo $item->description; ?></td>
-                                <td><?php echo $item->news_type; ?></td>
-                                <td>
+                                <td style="vertical-align: middle;"><?php echo $item->description; ?></td>
+                                <td class="text-center"><?php echo $item->news_type; ?></td>
+                                <td class="text-center">
                                     <?php if ($item->news_type == "image") { ?>
-                                        <img width="100" src="<?php echo base_url("uploads/${viewFolder}/$item->img_url"); ?>" alt="" class="img-rounded">
+                                        <img width="100" src="<?php echo base_url("uploads/${viewFolder}/$item->img_url"); ?>" alt="" class="img-rounded" style="vertical-align: middle;">
                                     <?php } else if ($item->news_type == "video") { ?>
                                         <iframe width="100" src="<?php echo $item->video_url; ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
                                         </iframe>
                                     <?php } ?>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <input data-url="<?php echo base_url("news/isActiveSetter/$item->id"); ?>" class="isActive" type="checkbox" data-switchery data-color="#10c469" <?php echo ($item->isActive) ? "checked" : ""; ?> />
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <button data-url="<?php echo base_url("news/delete/$item->id"); ?>" class="btn btn-sm btn-danger btn-outline remove-btn">
                                         <i class="fa fa-trash"></i> Sil
                                     </button>

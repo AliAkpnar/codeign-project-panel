@@ -19,7 +19,7 @@
 
         <a href="" class="navbar-brand">
             <span class="brand-icon"><i class="fa fa-gg"></i></span>
-            <span class="brand-name">Codeigniter-P</span>
+            <span class="brand-name">Project-Panel</span>
         </a>
     </div><!-- .navbar-header -->
 

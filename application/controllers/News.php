@@ -12,6 +12,11 @@ class News extends CI_Controller
 
         $this->viewFolder = "news_v"; // viewFolder = news_v
 
+
+        if (!get_active_user()) {
+            redirect(base_url("login"));
+        }
+
         /* Product modeli-entity yükle*/
         $this->load->model("news_model");
         $this->load->model("product_image_model");

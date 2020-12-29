@@ -1,20 +1,25 @@
 <?php
 
-function convertToSeo($text){
+function convertToSeo($text)
+{
 
-    $turkce = array("ç","Ç","ğ","Ğ","ü","Ü","ö","Ö","ı","İ","ş","Ş",".",",","!","'","\""," ","?","*","_","|","=","[","]","{","}","(",")");
-    $convert = array("c","c","g","g","u","u","o","o","i","i","s","s", "-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-");
+    $turkce = array("ç", "Ç", "ğ", "Ğ", "ü", "Ü", "ö", "Ö", "ı", "İ", "ş", "Ş", ".", ",", "!", "'", "\"", " ", "?", "*", "_", "|", "=", "[", "]", "{", "}", "(", ")");
+    $convert = array("c", "c", "g", "g", "u", "u", "o", "o", "i", "i", "s", "s", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-");
 
-    return strtolower(str_replace($turkce , $convert , $text));
-
+    return strtolower(str_replace($turkce, $convert, $text));
 }
 
-/* function getFileName($img_url){
+function get_active_user()
+{
 
-    $file_name = $this->product_image_model->getById(
-        array(
-            "id"   => $id
-        )
-    );
-    return $img_url;
-} */
+    $t = &get_instance();
+
+
+    $user = $t->session->userdata("user");
+
+    if ($user) {
+        return $user;
+    } else {
+        return false;
+    }
+}

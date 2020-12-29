@@ -4,7 +4,6 @@
 
 td {
   vertical-align: middle !important;
-  display: table-cell;
 }
 
 th {
@@ -19,8 +18,13 @@ th {
 .w100 {
   width: 100px;
 }
+
 .w50 {
   width: 50px;
+}
+
+.w200 {
+  width: 200px;
 }
 
 .sortable {

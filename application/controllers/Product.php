@@ -1,27 +1,35 @@
 <?php
 
 
-class Product extends CI_Controller{
+class Product extends CI_Controller
+{
 
     public $viewFolder = "";
 
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
 
         $this->viewFolder = "product_v"; // viewFolder = product_v
 
+
+        if (!get_active_user()) {
+            redirect(base_url("login"));
+        }
+
         /* Product modeli-entity yükle*/
         $this->load->model("product_model");
         $this->load->model("product_image_model");
-
     }
 
-    public function index(){
+    public function index()
+    {
 
         $viewData = new stdClass();
         /*Tablodan veri getir */
         $items = $this->product_model->get_all(
-            array(), "rank ASC"
+            array(),
+            "rank ASC"
         );
 
         /* View e gönderilecek Degisklenlerin set edilmesi */
@@ -29,21 +37,23 @@ class Product extends CI_Controller{
         $viewData->subViewFolder = "listeleme";
         $viewData->items = $items;
 
-        $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index" , $viewData); // dinamiklestirildi
+        $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData); // dinamiklestirildi
     }
 
-    public function new_form(){
+    public function new_form()
+    {
 
         $viewData = new stdClass();
         $viewData->viewFolder = $this->viewFolder;
         $viewData->subViewFolder = "ekleme";
-        $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index" , $viewData);
+        $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
     }
 
-    public function save(){
+    public function save()
+    {
         $this->load->library("form_validation"); // kendi özelliği library
 
-        $this->form_validation->set_rules("title","Başlık","required|trim"); //content ---> name-placeholder-required ---->kuralları ayarla
+        $this->form_validation->set_rules("title", "Başlık", "required|trim"); //content ---> name-placeholder-required ---->kuralları ayarla
         $this->form_validation->set_message(
             array(
                 "required" => "<b>{field} zorunludur</b>"
@@ -54,51 +64,47 @@ class Product extends CI_Controller{
 
         //
 
-        if($validate){
+        if ($validate) {
             $insert = $this->product_model->add(
                 array(
                     "title"           => $this->input->post("title"),
                     "description"     => $this->input->post("description"),
                     "url"             => convertToSeo($this->input->post("title")),
                     "rank"            => 0,
-                    "isActive"        =>1,
+                    "isActive"        => 1,
                     "createdAt"       => date("Y-m-d H:i:s")
                 )
             );
             // Alert eklenecek
-            if($insert){
+            if ($insert) {
                 $alert = array(
                     "text"  =>  "Added!!!",
                     "title" => "Success",
                     "type"  =>  "success"
                 );
-                
-            }else{
+            } else {
 
                 $alert = array(
                     "text"  =>  "Error",
                     "title" => "Failure",
                     "type"  =>  "error"
                 );
-
             }
 
-            $this->session->set_flashdata("alert" , $alert); // Session a yazma işlemi 
+            $this->session->set_flashdata("alert", $alert); // Session a yazma işlemi 
 
             redirect(base_url("product"));
-
-        }else{
+        } else {
             $viewData = new stdClass();
             $viewData->viewFolder = $this->viewFolder;
             $viewData->subViewFolder = "ekleme";
             $viewData->form_error = true;
-            $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index" , $viewData);
-            
+            $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
         }
-
     }
 
-    public function update_form($id){
+    public function update_form($id)
+    {
         $viewData = new stdClass();
 
         // veri getir db den tek kayıt
@@ -113,13 +119,14 @@ class Product extends CI_Controller{
         $viewData->viewFolder = $this->viewFolder;
         $viewData->subViewFolder = "guncelleme";
         $viewData->item = $item; // view e, cektigim verileri item objesi ile gönderdim.
-        $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index" , $viewData);
+        $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
     }
 
-    public function update($id){
+    public function update($id)
+    {
         $this->load->library("form_validation"); // kendi özelliği library
 
-        $this->form_validation->set_rules("title","Başlık","required|trim"); //content ---> name-placeholder-required ---->kuralları ayarla
+        $this->form_validation->set_rules("title", "Başlık", "required|trim"); //content ---> name-placeholder-required ---->kuralları ayarla
         $this->form_validation->set_message(
             array(
                 "required" => "<b>{field} zorunludur</b>"
@@ -130,7 +137,7 @@ class Product extends CI_Controller{
 
         //
 
-        if($validate){
+        if ($validate) {
             $update = $this->product_model->update(
                 array(
                     "id" => $id
@@ -142,28 +149,25 @@ class Product extends CI_Controller{
                 ) // id ile bulunan bulunan veriyi getir ve 2.arraydeki ile degisştir. 
             );
             // Alert eklenecek
-            if($update){
+            if ($update) {
 
                 $alert = array(
                     "text"  =>  "Updated!!!",
                     "title" => "Success",
                     "type"  =>  "warning"
                 );
-
-            }else{
+            } else {
 
                 $alert = array(
                     "text"  =>  "Error",
                     "title" => "Failure",
                     "type"  =>  "error"
                 );
-                
             }
 
-            $this->session->set_flashdata("alert" , $alert);
+            $this->session->set_flashdata("alert", $alert);
             redirect(base_url("product"));
-
-        }else{
+        } else {
 
 
             $viewData = new stdClass();
@@ -175,47 +179,44 @@ class Product extends CI_Controller{
                 )
             );
 
-            
+
             $viewData->viewFolder = $this->viewFolder;
             $viewData->subViewFolder = "guncelleme";
             $viewData->form_error = true;
             $viewData->item = $item; // guncelleme-content de item olmalı
-            $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index" , $viewData);
-            
+            $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
         }
-
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $delete = $this->product_model->delete(
             array(
                 "id" => $id
             )
         );
-        if($delete){
+        if ($delete) {
 
             $alert = array(
                 "text"  =>  "Deleted!!!",
                 "title" => "Success",
                 "type"  =>  "error"
             );
-
-        }else{
+        } else {
 
             $alert = array(
                 "text"  =>  "Error",
                 "title" => "Failure",
                 "type"  =>  "error"
             );
-            
         }
 
-        $this->session->set_flashdata("alert" , $alert);
+        $this->session->set_flashdata("alert", $alert);
         redirect(base_url("product"));
-
     }
 
-    public function image_delete($id , $parent_id){
+    public function image_delete($id, $parent_id)
+    {
 
 
         $file_name = $this->product_image_model->getById(
@@ -230,7 +231,7 @@ class Product extends CI_Controller{
             )
         );
 
-        if($delete){
+        if ($delete) {
 
             unlink("uploads/{$this->viewFolder}/$file_name->img_url"); // yüklenenler dosyadan silinir
 
@@ -239,55 +240,22 @@ class Product extends CI_Controller{
                 "title" => "Success",
                 "type"  =>  "error"
             );
-
-            
-        }else{
+        } else {
             $alert = array(
                 "text"  =>  "Error",
                 "title" => "Failure",
                 "type"  =>  "error"
             );
         }
-        $this->session->set_flashdata("alert" , $alert);
+        $this->session->set_flashdata("alert", $alert);
         redirect(base_url("product/image_form/$parent_id"));
     }
 
-    /* public function isActiveSetter($id){
-        if($id){
-            $isActive = ($this->input->post("data") === "true") ? 1 : 0; // convert string to integer value - comes string value from JS -- Custom.js Bstrap switchery
 
-            $this->product_model->update(
-                array(
-                    "id" => $id,
-                ),  
-                array(
-                    "isActive" => $isActive
-                )
-            );
-        }
-    } */
+    public function isActiveSetter($id)
+    {
 
-/* 
-    // parent_id == product_id -> image_list_v -- cover pick
-    public function isCoverSetter($id , $parent_id){
-        if($id && $parent_id){
-            $isCover = ($this->input->post("data") === "true") ? 1 : 0; // convert string to integer value - comes string value from JS -- Custom.js Bstrap switchery
-
-            $this->product_image_model->update(
-                array(
-                    "id" => $id,
-                    "product_id" => $parent_id
-                ),  
-                array(
-                    "isCover" => $isCover
-                )
-            );
-        }
-    } */
-
-    public function isActiveSetter($id){
-
-        if($id){
+        if ($id) {
 
             $isActive = ($this->input->post("data") === "true") ? 1 : 0;
 
@@ -302,9 +270,10 @@ class Product extends CI_Controller{
         }
     }
 
-    public function isCoverSetter($id, $parent_id){
+    public function isCoverSetter($id, $parent_id)
+    {
 
-        if($id && $parent_id){
+        if ($id && $parent_id) {
 
             $isCover = ($this->input->post("data") === "true") ? 1 : 0;
 
@@ -340,19 +309,20 @@ class Product extends CI_Controller{
             $viewData->item_images = $this->product_image_model->get_all(
                 array(
                     "product_id"    => $parent_id
-                ), "rank ASC"
+                ),
+                "rank ASC"
             );
 
             $render_html = $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/render_elements/image_list_v", $viewData, true);
 
             echo $render_html;
-
         }
     }
 
-    public function imageIsActiveSetter($id){
+    public function imageIsActiveSetter($id)
+    {
 
-        if($id){
+        if ($id) {
 
             $isActive = ($this->input->post("data") === "true") ? 1 : 0;
 
@@ -368,14 +338,15 @@ class Product extends CI_Controller{
     }
 
 
-    public function rankSetter(){
+    public function rankSetter()
+    {
         $data = $this->input->post("data");
 
-        parse_str($data , $order);   // gelen array i ayırma, ayrılanları order degiskenine aktarır
+        parse_str($data, $order);   // gelen array i ayırma, ayrılanları order degiskenine aktarır
 
         $items = $order["ord"]; // "ord" diamik olarak listeleme contentin içinden gelecek
 
-        foreach($items as $rank => $id){
+        foreach ($items as $rank => $id) {
             $this->product_model->update(
                 array(
                     "id" => $id,
@@ -388,14 +359,15 @@ class Product extends CI_Controller{
         }
     }
 
-    public function imageRankSetter(){
+    public function imageRankSetter()
+    {
         $data = $this->input->post("data");
 
-        parse_str($data , $order);   // gelen array i ayırma, ayrılanları order degiskenine aktarır
+        parse_str($data, $order);   // gelen array i ayırma, ayrılanları order degiskenine aktarır
 
         $items = $order["ord"]; // "ord" diamik olarak listeleme contentin içinden gelecek
 
-        foreach($items as $rank => $id){
+        foreach ($items as $rank => $id) {
             $this->product_image_model->update(
                 array(
                     "id" => $id,
@@ -408,7 +380,8 @@ class Product extends CI_Controller{
         }
     }
 
-    public function image_form($id){
+    public function image_form($id)
+    {
         $viewData = new stdClass();
         $viewData->viewFolder = $this->viewFolder;
         $viewData->subViewFolder = "resimler";
@@ -420,31 +393,33 @@ class Product extends CI_Controller{
         $item_images = $this->product_image_model->get_all(
             array(
                 "product_id"  => $id
-            ),"rank ASC"
+            ),
+            "rank ASC"
         );
 
         $viewData->item = $item;
         $viewData->item_images = $item_images;
-        $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index" , $viewData);
+        $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
     }
 
-    public function image_upload($id){
+    public function image_upload($id)
+    {
 
-         // $dosya_adi = convertToSeo($_FILES["file"] ["name"]); 
-        $dosya_adi = convertToSeo(pathinfo($_FILES["file"] ["name"] , PATHINFO_FILENAME)) . "." . pathinfo($_FILES["file"] ["name"] , PATHINFO_EXTENSION); // uzantı ayarlama;
+        // $dosya_adi = convertToSeo($_FILES["file"] ["name"]); 
+        $dosya_adi = convertToSeo(pathinfo($_FILES["file"]["name"], PATHINFO_FILENAME)) . "." . pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION); // uzantı ayarlama;
 
         $config["allowed_types"] = "jpg|jpeg|png";
         $config["upload_path"] = "uploads/$this->viewFolder";
-        $config["file_name"] = $dosya_adi ;
+        $config["file_name"] = $dosya_adi;
 
 
-        $this->load->library("upload" , $config);
+        $this->load->library("upload", $config);
 
         $upload = $this->upload->do_upload("file"); // 1 yada 0 degeri döndürür - success or not name=file dropzone daki default name
 
-       
 
-        if($upload){
+
+        if ($upload) {
 
             $uploaded_file = $this->upload->data("file_name");
 
@@ -458,38 +433,16 @@ class Product extends CI_Controller{
                     "product_id"   => $id
                 ) // product_id = content dropzone $item->id
             );
-
         } // product/image_upload/$item->id
-        else{
+        else {
             echo "Failed";
         }
-
     }
 
-    /* public function refresh_image_list($id){
 
 
-        $viewData = new stdClass();
-        $viewData->viewFolder = $this->viewFolder;
-        $viewData->subViewFolder = "resimler";
-        // veri çek db den
-        $item_images = $this->product_image_model->get_all(
-            array(
-                "product_id"  => $id
-            )
-        );
-
-        $viewData->item_images = $item_images;
-
-        $render_html = $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/render_elements/image_list_v" , $viewData , true); // render page - html gelecek response olarak
-
-        echo $render_html;
-
-    } // product/refresh_image_list/$item->id - resimler/content */
-
-
-
-    public function refresh_image_list($id){
+    public function refresh_image_list($id)
+    {
 
         $viewData = new stdClass();
 
@@ -506,7 +459,5 @@ class Product extends CI_Controller{
         $render_html = $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/render_elements/image_list_v", $viewData, true);
 
         echo $render_html;
-
     }
-
 }
